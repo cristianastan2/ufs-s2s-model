@@ -4,7 +4,7 @@ test cpld_fv3_mom6_cice_2d_atm_flux: fv3_mom6_cice.exe {
     use plat%default_cpl
     use fv3_defaults 
     use cpl_defaults 
- 
+
     TEST_DESCR="Fully coupled FV3-MOM6-CICE system - 2d_warm" 
     CNTL_NAME="RT-Baselines_2d_warm@[ATMRES]" 
  
@@ -19,6 +19,7 @@ test cpld_fv3_mom6_cice_2d_atm_flux: fv3_mom6_cice.exe {
 
       FV3_input_data="@[plat%INPUTS]/FV3_input_data@[ATMRES]" 
      UGCS_input_data="@[plat%INPUTS]"
+     #USER_input_data="/scratch2/NCEPDEV/marine/Cristiana.Stan/fix_prep_benchmark2_halfdeg"
           OZONE_data="@[FV3_input_data]/INPUT/global_o3prdlos.f77"
             CO2_data="@[FV3_input_data]/INPUT"
     MED_restart_data="@[UGCS_input_data]/MEDIATOR@[ATMRES]"
@@ -36,9 +37,9 @@ test cpld_fv3_mom6_cice_2d_atm_flux: fv3_mom6_cice.exe {
          CPL_FAST="@[DT_ATMOS]"
 
     # - set date YYYYMMDDHH
-     SYEAR='2016'
-    SMONTH='10'
-      SDAY='03'
+     SYEAR='2012'
+    SMONTH='01'
+      SDAY='01'
      SHOUR='00'
      CDATE="@[SYEAR]@[SMONTH]@[SDAY]@[SHOUR]"
 
@@ -69,21 +70,25 @@ test cpld_fv3_mom6_cice_2d_atm_flux: fv3_mom6_cice.exe {
            'global_o3prdlos.f77'  <=copy=     "@[OZONE_data]"
                           '*grb'  <=copyfrom= "@[FV3_input_data]"
                    'field_table'  <=copy=     "@[FV3_input_data]/@[FIELD_TABLE]"
-            'INPUT/grid_spec.nc'  <=copy=     "@[UGCS_input_data]/CPL_FIX/a@[FV3_mosaic]o@[OCNRES]/grid_spec.nc"
+#            'INPUT/grid_spec.nc'  <=copy=     "@[USER_input_data]fix_mom6/INPUT/grid_spec.nc"
+             'INPUT/grid_spec.nc'  <=copy=     "@[UGCS_input_data]/CPL_FIX/a@[FV3_mosaic]o@[OCNRES]/grid_spec.nc"
    "INPUT/@[FV3_mosaic]_grid*nc"  <=copyfrom= "@[FV3_input_data]/INPUT"
              'INPUT/oro_data*nc'  <=copyfrom= "@[FV3_input_data]/INPUT"
  "INPUT/@[FV3_mosaic]_mosaic.nc"  <=copy=     "@[FV3_input_data]/INPUT/grid_spec.nc"
              'INPUT/gfs_ctrl.nc'  <=copyfrom= "@[FV3_input_data]/INPUT"
 #MOM6 fixed input
-                       'INPUT/*'  <=copyfrom= "@[UGCS_input_data]/MOM6_FIX/@[OCNRES]"          
+#                       'INPUT/*'  <=copyfrom= "@[USER_input_data]/fix_mom6/INPUT"          
+              'INPUT/*'  <=copyfrom= "@[UGCS_input_data]/MOM6_FIX/@[OCNRES]"
 #CICE5 fixed input
-       'grid_cice_NEMS_mx025.nc'  <=copy=     "@[UGCS_input_data]/CICE_FIX/@[OCNRES]/grid_cice_NEMS_mx025.nc"
-       'kmtu_cice_NEMS_mx025.nc'  <=copy=     "@[UGCS_input_data]/CICE_FIX/@[OCNRES]/kmtu_cice_NEMS_mx025.nc"
+#       'grid_cice_NEMS.nc'        <=copy=     "@[USER_input_data]/fix_cice5/grid_cice_NEMS_mx@[OCNRES].nc"
+#       'kmtu_cice_NEMS.nc'        <=copy=     "@[USER_input_data]/fix_cice5/kmtu_cice_NEMS_mx@[OCNRES].nc"
+        'grid_cice_NEMS.nc'  <=copy=     "@[UGCS_input_data]/CICE_FIX/@[OCNRES]/grid_cice_NEMS_mx@[OCNRES].nc"
+        'kmtu_cice_NEMS.nc'  <=copy=     "@[UGCS_input_data]/CICE_FIX/@[OCNRES]/kmtu_cice_NEMS_mx@[OCNRES].nc"
 # ICs
             'INPUT/sfc_data*.nc'  <=copyfrom= "@[FV3_IC]"
             'INPUT/gfs_data*.nc'  <=copyfrom= "@[FV3_IC]"
                  'INPUT/MOM*.nc'  <=copyfrom= "@[MOM6_IC]"
-            'cice5_model.res.nc'  <=copy=     "@[CICE5_IC]/cice5_model_0.25.res_@[CDATE].nc"
+            'cice5_model.res.nc'  <=copy=     "@[CICE5_IC]/cice5_model_@[ICERES].res_@[CDATE].nc"
                 "@[RESTART_MED]"  <=copyfrom= "@[MED_restart_data]"
 # namelists,templates and configurations
                      'input.nml'  <=atparse=  "@[PARMnems]/@[INPUT_NML]"

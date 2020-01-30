@@ -5,6 +5,8 @@ test cpld_fv3_384_mom6_cice_cold_bmark: fv3_mom6_cice.exe {
     use plat%default_cpl_benchmark
 
     ATMRES='384'
+    OCNRES='050'
+    ICERES='0.50'
     TEST_DESCR="Fully coupled FV3-MOM6-CICE system - cold 384"
  
     DT_ATMOS='450'
@@ -34,16 +36,18 @@ test cpld_fv3_384_mom6_cice_cold_bmark: fv3_mom6_cice.exe {
     CDATE="@[SYEAR]@[SMONTH]@[SDAY]@[SHOUR]"
 
     # - set run type for CICE in ice_in
-    RUNID='cpcice'
+    #RUNID='cpcice'
 
     # - set initialization type for MOM6 
     MOM6_RESTART_SETTING = 'r'
 
     # set locations of ICs
          BM_IC="/scratch1/NCEPDEV/nems/Bin.Li/S2S/FROM_HPSS/@[CDATE]"
+         CS_IC="/scratch2/NCEPDEV/marine/Cristiana.Stan/ICS/@[CDATE]"
         FV3_IC="@[BM_IC]/gfs/C384/INPUT"
-       MOM6_IC="@[BM_IC]/mom6_da"
-      CICE5_IC="@[BM_IC]/cpc"    
+       MOM6_IC="@[CS_IC]/mom6_da"
+      #CICE5_IC="@[CS_IC]"    
+      CICE5_IC="/scratch2/NCEPDEV/climate/Denise.Worthen/ICmx050/@[CDATE]"
 
     # Specify output files:
     criteria output {
