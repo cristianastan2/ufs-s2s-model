@@ -9,7 +9,7 @@
 [submodule "CICE_SRC"]
 	path = CICE_SRC
 	url = https://github.com/cristianastan2/CICE5.git
-	branch = develop
+	branch = halfdeg 
 [submodule "FMS"]
 	path = FMS
 	url = https://github.com/NOAA-EMC/FMS
